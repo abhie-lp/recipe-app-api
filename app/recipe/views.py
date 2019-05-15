@@ -1,4 +1,5 @@
-from .serializers import TagSerializer, IngredientSerializer, RecipeSerializer
+from .serializers import TagSerializer, IngredientSerializer,\
+    RecipeSerializer, RecipeDetailSerializer
 from core.models import Tag, Ingredient, Recipe
 
 from rest_framework import viewsets, mixins
@@ -33,9 +34,15 @@ class IngredientViewSet(BaseRecipeViewSet):
     queryset = Ingredient.objects.all()
 
 
-class RecipeViewSet(BaseRecipeViewSet):
+class RecipeViewSet(BaseRecipeViewSet, mixins.RetrieveModelMixin):
     serializer_class = RecipeSerializer
     queryset = Recipe.objects.all()
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return RecipeDetailSerializer
+
+        return self.serializer_class
