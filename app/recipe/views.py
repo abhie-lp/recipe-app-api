@@ -6,7 +6,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 
-class TagViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+class TagViewSet(viewsets.GenericViewSet,
+                 mixins.ListModelMixin,
+                 mixins.CreateModelMixin):
     """Manage tags in the database"""
 
     serializer_class = TagSerializer
@@ -17,3 +19,7 @@ class TagViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     def get_queryset(self):
 
         return self.queryset.filter(user=self.request.user).order_by("-name")
+
+    def perform_create(self, seriializer):
+        """Create a new tag"""
+        seriializer.save(user=self.request.user)
