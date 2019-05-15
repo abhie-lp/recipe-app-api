@@ -78,8 +78,8 @@ class Recipe(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     link = models.URLField(max_length=255, blank=True)
 
-    tags = models.ManyToManyField(Tag)
-    ingredients = models.ManyToManyField(Ingredient)
+    tags = models.ManyToManyField(Tag, blank=True)
+    ingredients = models.ManyToManyField(Ingredient, blank=True)
 
     def __str__(self):
         return self.title

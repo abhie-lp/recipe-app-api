@@ -34,7 +34,9 @@ class IngredientViewSet(BaseRecipeViewSet):
     queryset = Ingredient.objects.all()
 
 
-class RecipeViewSet(BaseRecipeViewSet, mixins.RetrieveModelMixin):
+class RecipeViewSet(viewsets.ModelViewSet):
+    authentication_classes = TokenAuthentication,
+    permission_classes = IsAuthenticated,
     serializer_class = RecipeSerializer
     queryset = Recipe.objects.all()
 
@@ -46,3 +48,6 @@ class RecipeViewSet(BaseRecipeViewSet, mixins.RetrieveModelMixin):
             return RecipeDetailSerializer
 
         return self.serializer_class
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
